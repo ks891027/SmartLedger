@@ -1,25 +1,29 @@
 # 🖥️ SmartLedger: Expense Tracker + AI Assistant
 
-這是一個基於 **Streamlit** 的 Web App，整合了資料庫紀錄管理與 AI 模型推論。  
+這是一個基於 **Streamlit** 的 Web App，實作「智慧記帳助理 Demo」，整合了資料庫紀錄管理、自然語言輸入與 AI 模型推論。  
 
 ---
 
-## 📌 功能特色
+## 🎯 功能目標
 
-### 💰 記帳功能
-- **新增紀錄**：輸入日期、金額、類別，紀錄支出  
-- **清除紀錄**：一鍵清除資料庫所有紀錄  
-- **篩選顯示**：可依日期/類別篩選（預設顯示全部）  
-- **匯出功能**：將所有紀錄匯出為 CSV  
+### (a) 自然語言輸入
+- 使用者可在網頁上輸入文字，例如：  
+  - 「我今天花了 200 元搭計程車」  
+  - 「昨天在超商買咖啡 65 元」  
 
-### 📊 視覺化功能
-- **長條圖**：顯示各類別支出分布  
-- **圓餅圖**：顯示支出比例  
-- **左右並排顯示**，更直觀比較  
+### (b) LLM 分析
+- 使用 LLM（本專案使用 **Gemma-3-1B-IT**）解析輸入文字，並自動抽取以下欄位：  
+  - **日期**  
+  - **金額**  
+  - **類別**（如：餐飲、交通、購物…）  
 
-### 🤖 AI 模型支援
-- **Transformers 模型推論**：可載入 Hugging Face 模型進行測試  
-- **Accelerate + Bitsandbytes**：支援 GPU 加速與低精度推論（4bit/8bit），大幅減少顯存使用
+### (c) 資料庫儲存
+- 紀錄會自動存入 SQLite 資料庫，方便後續查詢與匯出  
+
+### (d) 動態圖表顯示
+- **表格**：顯示所有紀錄（日期、金額、類別）  
+- **圖表**：以長條圖與圓餅圖呈現支出分布  
+- **即時刷新**：每次新增紀錄後，表格與圖表即時更新  
 
 
 ## 📷 介面展示 (Screenshots)
@@ -29,6 +33,35 @@
 
 ### 視覺化圖表
 ![SmartLedger 視覺化圖表](./example/2.png)
+
+## 🧭 系統架構
+
+```mermaid
+flowchart LR
+    subgraph Client["使用者瀏覽器"]
+        UI["Streamlit 前端<br/>（輸入框 / 篩選 / 匯出）"]
+    end
+
+    subgraph Backend["SmartLedger 後端（Python）"]
+        ST["Streamlit App<br/>`streamlit_app.py`"]
+        NLP["LLM 推論<br/>Gemma-3-1B-IT<br/>Transformers + Accelerate + BitsAndBytes"]
+        PARSE["欄位抽取<br/>（日期 / 金額 / 類別）"]
+        DB[(SQLite 資料庫)]
+        DF["Pandas DataFrame"]
+        VIS["Matplotlib 圖表<br/>（長條圖 / 圓餅圖）"]
+        CSV["CSV 匯出"]
+    end
+
+    UI --> ST
+    ST --> NLP --> PARSE --> DB
+    ST --> DF
+    DB --> DF
+    DF --> VIS
+    DF --> CSV
+    VIS --> ST
+    CSV --> UI
+    ST --> UI
+```
 
 ## ⚙️ 安裝與使用
 
