@@ -21,6 +21,15 @@
 - **Transformers 模型推論**：可載入 Hugging Face 模型進行測試  
 - **Accelerate + Bitsandbytes**：支援 GPU 加速與低精度推論（4bit/8bit），大幅減少顯存使用
 
+
+## 📷 介面展示 (Screenshots)
+
+### 記帳介面
+![SmartLedger 記帳介面](./example/1.png)
+
+### 視覺化圖表
+![SmartLedger 視覺化圖表](./example/2.png)
+
 ## ⚙️ 安裝與使用
 
 ### 1. 建立虛擬環境
